@@ -1,4 +1,4 @@
-# deletedAccountKicker
+# Telegram userbot to kick deleted accounts from groups
 
 Python userbot which automatically kicks deleted accounts from specified Telegram groups.
 
