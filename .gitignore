@@ -1,0 +1,3 @@
+*.session
+config.yml
+*.session-journal
