@@ -17,3 +17,9 @@ Usage
 ----
 Run it with `python3 main.py`
 On the first start you will be asked for your phone number, the verification code and if you have twofactor auth enabled for the password as well. Enter all and the programm should start running. You don't need to log in again. If you want to log out simply end the session from another device AND delete the my_account.session file.
+
+Troubleshooting
+----
+
+#### ModuleNotFoundError: No module named 'yaml'
+Just install it with `pip3 install pyyaml`
