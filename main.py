@@ -36,8 +36,10 @@ def main():
             kick_list = []
             skip_chat = False
 
+            found_self = False
             for member in member_list:
                 if member.user.is_self:
+                    found_self = True
                     if (not member.status == "administrator" or not member.permissions.can_restrict_members) and not member.status == "creator":
                         msg = "⚠️⚠️⚠️ I have no permissions to kick members in {}. Skipping this chat... \n\n".format(chat_info.title)
                         print(msg)
@@ -46,6 +48,11 @@ def main():
                 if member.user.is_deleted:
                     kick_list.append(member)
             
+            if not found_self:
+                msg = "⚠️⚠️⚠️ I'm no member of the group {}! Skipping this chat...\n\n".format(chat_info.title)
+                print(msg)
+                report += msg+"\n"
+                skip_chat = True
             if skip_chat:
                 continue
 
