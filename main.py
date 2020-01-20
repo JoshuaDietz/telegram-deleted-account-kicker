@@ -93,7 +93,13 @@ def do_notify_before(user_id, client):
     client.send_message(user_id, "Starting to clean up groups from deleted accounts")
 
 def do_notify_after(user_id, client, report):
-    client.send_message(user_id, "Sucessfully cleaned up. Full report: ```{}```".format(report), "markdown")
+	if len(report) > 4096:
+		text_file = open("result.txt", "w")
+		text_file.write(report)
+		text_file.close()
+		client.send_document(user_id, 'result.txt')
+    else:
+        client.send_message(user_id, "Sucessfully cleaned up. Full report: ```{}```".format(report), "markdown")
 
 
 
