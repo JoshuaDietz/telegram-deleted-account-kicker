@@ -40,7 +40,7 @@ def main():
             for member in member_list:
                 if member.user.is_self:
                     found_self = True
-                    if (not member.status == "administrator" or not member.permissions.can_restrict_members) and not member.status == "creator":
+                    if (not member.status == "administrator" or not member.can_restrict_members) and not member.status == "creator":
                         msg = "⚠️⚠️⚠️ I have no permissions to kick members in {}. Skipping this chat... \n\n".format(chat_info.title)
                         print(msg)
                         report += msg+"\n"
