@@ -23,3 +23,7 @@ Troubleshooting
 
 #### ModuleNotFoundError: No module named 'yaml'
 Just install it with `pip3 install pyyaml`
+
+### pyrogram.errors.exceptions.bad_request_400.MessageTooLong: [400 MESSAGE_TOO_LONG]: The message text is over 4096 characters (caused by "messages.SendMessage")
+
+Use branch 4096Fix
