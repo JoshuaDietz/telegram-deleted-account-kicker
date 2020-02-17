@@ -27,7 +27,9 @@ def main():
                 do_notify_before(user_id, app)
 
         for chat_id in chat_ids:
+            chat_id = int(chat_id)
             chat_info = app.get_chat(chat_id)
+            
             print("==========================================")
             print("")
             print("Working on chat {} now".format(chat_info.title))
@@ -90,10 +92,10 @@ def display_userinfo(chat_member):
     print("is_deleted: {}".format(chat_member.user.is_deleted))
 
 def do_notify_before(user_id, client):
-    client.send_message(user_id, "Starting to clean up groups from deleted accounts")
+    client.send_message(int(user_id), "Starting to clean up groups from deleted accounts")
 
 def do_notify_after(user_id, client, report):
-    client.send_message(user_id, "Sucessfully cleaned up. Full report: ```{}```".format(report), "markdown")
+    client.send_message(int(user_id), "Sucessfully cleaned up. Full report: ```{}```".format(report), "markdown")
 
 
 
