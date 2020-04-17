@@ -16,6 +16,7 @@ notify_after_ids = cfg['notifications']['notify_after_ids']
 chat_ids = cfg['bot']['chat_ids']
 SLEEP_PER_CHAT = cfg['bot']['sleep_per_chat']
 SLEEP_AFTER_KICK = cfg['bot']['sleep_after_kick']
+MAX_MESSAGE_LENGTH = 4000
 
 def main():
     with Client("my_account", api_id, api_hash) as app:
@@ -95,7 +96,20 @@ def do_notify_before(user_id, client):
     client.send_message(int(user_id), "Starting to clean up groups from deleted accounts")
 
 def do_notify_after(user_id, client, report):
-    client.send_message(int(user_id), "Sucessfully cleaned up. Full report: ```{}```".format(report), "markdown")
+        send_message_split(user_id, client, "Sucessfully cleaned up. Full report: {}".format(report))
+
+#sends a message longer than the telegram limit allows by splitting it into multiple. Always uses code formatting for the message
+def send_message_split(user_id, client, message): 
+    current_position = 0
+    while current_position < len(message):
+        end = min(current_position + MAX_MESSAGE_LENGTH, len(message) - 1)
+        text = message[current_position:end]
+        if len(text) == 0:
+            return
+        text = "```" + text + "```"
+        current_position = end
+
+        client.send_message(user_id, text, "markdown")
 
 
 
