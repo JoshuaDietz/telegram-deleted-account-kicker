@@ -67,8 +67,8 @@ def main():
                     app.kick_chat_member(chat_id, member.user.id)
                     kick_count += 1
                     time.sleep(SLEEP_AFTER_KICK)
-                except:
-                    msg = "Error occured when kicking user"
+                except Exception as ex:
+                    msg = "Error of type {} occured when kicking user: {}".format(type(ex).__name__, ex.args)
                     print(msg)
                     report += msg+"\n"
             overall_kick_count += kick_count
