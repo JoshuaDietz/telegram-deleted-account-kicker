@@ -1,6 +1,7 @@
 # This bot checks list of the chats specified below and kicks deleted accounts
 
 from pyrogram import Client
+from pyrogram.errors import FloodWait
 import time
 import yaml
 
@@ -27,9 +28,18 @@ def main():
             for user_id in notify_before_ids:
                 do_notify_before(user_id, app)
 
-        for chat_id in chat_ids:
+        j = 0
+        while j < len(chat_ids):
+            chat_id = chat_ids[j]
+            j += 1
             chat_id = int(chat_id)
-            chat_info = app.get_chat(chat_id)
+            try:
+                chat_info = app.get_chat(chat_id)
+            except FloodWait as e:
+                print("Getting chat info: Floodwait triggered. Trying again in {} seconds.".format(e.x))
+                time.sleep(e.x)
+                j -= 1
+                continue
             
             print("==========================================")
             print("")
@@ -61,16 +71,25 @@ def main():
 
             print("Members to kick from {}".format(chat_info.title))
             kick_count = 0
-            for member in kick_list:
+            i = 0
+            while i < len(kick_list):
+                member = kick_list[i]
+                i +=1
                 display_userinfo(member)
                 try:
                     app.kick_chat_member(chat_id, member.user.id)
-                    kick_count += 1
                     time.sleep(SLEEP_AFTER_KICK)
+                except FloodWait as e:
+                    print("Kicking: Floodwait triggered. Trying again in {} seconds.".format(e.x))
+                    time.sleep(e.x)
+                    i -= 1
+                    continue
                 except Exception as ex:
-                    msg = "Error of type {} occured when kicking user: {}".format(type(ex).__name__, ex.args)
+                    msg = "Error of type {} occured when kicking user: {}. Error message:".format(type(ex).__name__, ex.args)
                     print(msg)
                     report += msg+"\n"
+                    continue
+                kick_count += 1
             overall_kick_count += kick_count
 
             msg = "Kicked {} deleted accounts from {}".format(kick_count, chat_info.title)
