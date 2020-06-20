@@ -40,6 +40,11 @@ def main():
                 time.sleep(e.x)
                 j -= 1
                 continue
+            except Exception as ex:
+                    msg = "Error of type {} occured when getting chat info: {}. Error message:".format(type(ex).__name__, ex.args)
+                    print(msg)
+                    report += msg+"\n"
+                    continue
             
             print("==========================================")
             print("")
