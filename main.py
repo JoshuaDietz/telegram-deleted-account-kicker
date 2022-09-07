@@ -1,5 +1,6 @@
 # This bot checks list of the chats specified below and kicks deleted accounts
 
+
 from pyrogram import Client
 from pyrogram.errors import FloodWait
 import time
@@ -36,8 +37,8 @@ def main():
             try:
                 chat_info = app.get_chat(chat_id)
             except FloodWait as e:
-                print("Getting chat info: Floodwait triggered. Trying again in {} seconds.".format(e.x))
-                time.sleep(e.x)
+                print("Getting chat info: Floodwait triggered. Trying again in {} seconds.".format(e.value))
+                time.sleep(e.value)
                 j -= 1
                 continue
             except Exception as ex:
@@ -50,7 +51,7 @@ def main():
             print("")
             print("Working on chat {} now".format(chat_info.title))
             report += "=========================== \n {}\n===========================\n".format(chat_info.title)
-            member_list = app.iter_chat_members(chat_id)
+            member_list = app.get_chat_members(chat_id)
             kick_list = []
             skip_chat = False
 
@@ -82,11 +83,12 @@ def main():
                 i +=1
                 display_userinfo(member)
                 try:
-                    app.kick_chat_member(chat_id, member.user.id)
+                    app.ban_chat_member(chat_id, member.user.id)
+                    app.unban_chat_member(chat_id, member.user.id)
                     time.sleep(SLEEP_AFTER_KICK)
                 except FloodWait as e:
-                    print("Kicking: Floodwait triggered. Trying again in {} seconds.".format(e.x))
-                    time.sleep(e.x)
+                    print("Kicking: Floodwait triggered. Trying again in {} seconds.".format(e.value))
+                    time.sleep(e.value)
                     i -= 1
                     continue
                 except Exception as ex:
