@@ -1,13 +1,12 @@
 # This bot checks list of the chats specified below and kicks deleted accounts
 
-
 from pyrogram import Client
 from pyrogram.errors import FloodWait
 import time
 import yaml
 
 with open("config.yml", 'r') as ymlfile:
-    cfg = yaml.load(ymlfile)
+    cfg = yaml.safe_load(ymlfile)
 
 api_id = cfg['telegram']['api_id']
 api_hash = cfg['telegram']['api_hash']
@@ -46,7 +45,7 @@ def main():
                 print(msg)
                 report += msg+"\n"
                 continue
-            
+
             print("==========================================")
             print("")
             print("Working on chat {} now".format(chat_info.title))
@@ -59,14 +58,14 @@ def main():
             for member in member_list:
                 if member.user.is_self:
                     found_self = True
-                    if (not member.status == "administrator" or not member.can_restrict_members) and not member.status == "creator":
+                    if not member.privileges.can_restrict_members:
                         msg = "⚠️⚠️⚠️ I have no permissions to kick members in {}. Skipping this chat... \n\n".format(chat_info.title)
                         print(msg)
                         report += msg+"\n"
                         skip_chat = True
                 if member.user.is_deleted:
                     kick_list.append(member)
-            
+
             if not found_self:
                 msg = "⚠️⚠️⚠️ I'm no member of the group {}! Skipping this chat...\n\n".format(chat_info.title)
                 print(msg)
@@ -125,7 +124,7 @@ def do_notify_after(user_id, client, report):
         send_message_split(user_id, client, "Sucessfully cleaned up. Full report: {}".format(report))
 
 #sends a message longer than the telegram limit allows by splitting it into multiple. Always uses code formatting for the message
-def send_message_split(user_id, client, message): 
+def send_message_split(user_id, client, message):
     current_position = 0
     while current_position < len(message):
         end = min(current_position + MAX_MESSAGE_LENGTH, len(message) - 1)
@@ -137,8 +136,5 @@ def send_message_split(user_id, client, message):
 
         client.send_message(user_id, text, "markdown")
 
-
-
 if __name__ == "__main__":
     main()
-
